@@ -1,6 +1,6 @@
 # Case Data Format
 
-Each case is a single JSON file (in [`json/`](../json)). The same data is also provided as an Excel workbook (in [`excel/`](../excel)), where every JSON table is a sheet with the same name and the same columns.
+Each case is a single JSON file (in [`cases/json/`](../cases/json)). The same data is also provided as an Excel workbook (in [`cases/excel/`](../cases/excel)), where every JSON table is a sheet with the same name and the same columns.
 
 The format follows the pandapower data model, with the table and field names used in this course.
 
@@ -27,7 +27,7 @@ Reading a table into a row-oriented structure in Python:
 ```python
 import json
 
-with open("json/ieee14.json") as f:
+with open("cases/json/ieee14.json") as f:
     case = json.load(f)
 
 loads = case["Load"]

@@ -31,18 +31,19 @@ Each analysis must report:
 ├── docs/
 │   ├── DATA_FORMAT.md   Description of the case data format (all tables, fields and element models)
 │   └── figures/         Diagrams (*.drawio.svg — viewable as images, editable in draw.io)
-├── json/                Case files in JSON format (input of your tool)
-│   ├── ieee14.json
-│   ├── ieee30.json
-│   ├── ieee57.json
-│   ├── ieee118.json
-│   └── ieee300.json
-└── excel/               The same cases as Excel workbooks (one sheet per table)
-    ├── ieee14.xlsx
-    ├── ieee30.xlsx
-    ├── ieee57.xlsx
-    ├── ieee118.xlsx
-    └── ieee300.xlsx
+└── cases/
+    ├── json/            Case files in JSON format (input of your tool)
+    │   ├── ieee14.json
+    │   ├── ieee30.json
+    │   ├── ieee57.json
+    │   ├── ieee118.json
+    │   └── ieee300.json
+    └── excel/           The same cases as Excel workbooks (one sheet per table)
+        ├── ieee14.xlsx
+        ├── ieee30.xlsx
+        ├── ieee57.xlsx
+        ├── ieee118.xlsx
+        └── ieee300.xlsx
 ```
 
 The JSON and Excel files contain the same data. The JSON files are the input your tool must read; the Excel workbooks are provided for convenient inspection (each JSON table is a sheet with the same name and the same columns).
