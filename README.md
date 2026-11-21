@@ -29,7 +29,8 @@ Each analysis must report:
 .
 ├── README.md            This file
 ├── docs/
-│   └── DATA_FORMAT.md   Description of the case data format (all tables and fields)
+│   ├── DATA_FORMAT.md   Description of the case data format (all tables, fields and element models)
+│   └── figures/         Diagrams (*.drawio.svg — viewable as images, editable in draw.io)
 ├── json/                Case files in JSON format (input of your tool)
 │   ├── ieee14.json
 │   ├── ieee30.json

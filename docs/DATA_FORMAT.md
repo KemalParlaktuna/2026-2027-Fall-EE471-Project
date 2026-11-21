@@ -77,6 +77,8 @@ rows = [dict(zip(loads.keys(), values)) for values in zip(*loads.values())]
 | `Result_Load`, `Result_Shunt` `p_mw`, `q_mvar` | power **consumed** |
 | Branch flows (`p_from_mw`, `p_hv_mw`, …) | power flowing **into** the branch from that terminal |
 
+![Sign conventions at a bus](figures/sign_conventions.drawio.svg)
+
 ---
 
 ## 2. Input tables
@@ -190,6 +192,8 @@ Line modeled as a π-equivalent with distributed parameters given per km.
 | `in_service` | bool | – | Line in service |
 | `name` | string | – | Name |
 
+![Line π-equivalent model](figures/line_pi_model.drawio.svg)
+
 Total line parameters are obtained by multiplying the per-km values by `length_km`:
 
 - series impedance: `Z = (r_ohm_per_km + j·x_ohm_per_km) · length_km` (Ω)
@@ -224,11 +228,55 @@ Two-winding transformer with an optional tap changer.
 | `in_service` | bool | – | Transformer in service |
 | `name` | string | – | Name |
 
-Notes:
+#### Transformer model
 
-- Series impedance on the transformer rating: `|z_k| = vk_percent/100`, `r_k = vkr_percent/100`, `x_k = √(z_k² − r_k²)`; convert to the system base with the factor `base_mva / sn_mva`.
-- The rated voltage of the tapped winding is changed by the tap position: on the tap side, `V_rated × (1 + (tap_pos − tap_neutral) · tap_step_percent / 100)`. The off-nominal turns ratio follows from the tapped rated voltages and the `base_kv` of the connected buses.
-- Some branches connecting buses of different voltage levels in the original IEEE data are represented as transformers; their line charging appears in `i0_percent` (negative values) and their resistance in `vkr_percent`.
+The transformer is represented by an **ideal transformer on the HV side** followed by a **T-equivalent circuit**: the series short-circuit impedance is split into two equal halves, with the magnetizing admittance connected to ground at the middle node.
+
+![Transformer T-equivalent model](figures/transformer_t_model.drawio.svg)
+
+All quantities below are per unit on the system base (`S_base = base_mva`). `V_b,hv` and `V_b,lv` are the `base_kv` of `hv_node` and `lv_node`.
+
+**Series (short-circuit) impedance** — referred to the LV side:
+
+```
+z_k = vk_percent  / 100 · (S_base / sn_mva) · (vn_lv_kv / V_b,lv)²
+r_k = vkr_percent / 100 · (S_base / sn_mva) · (vn_lv_kv / V_b,lv)²
+x_k = √(z_k² − r_k²)
+z_k (complex) = r_k + j·x_k
+```
+
+**Magnetizing (shunt) admittance**:
+
+```
+y_m = |i0_percent| / 100 · (sn_mva / S_base) · (V_b,lv / vn_lv_kv)²
+g_m = pfe_kw / 1000 / S_base · (V_b,lv / vn_lv_kv)²
+b_m = √(y_m² − g_m²)
+Y_m = g_m − j·b_m
+```
+
+`Y_m` is always inductive: the sign of `i0_percent` does not change the model (the IEEE 118 and IEEE 300 cases contain negative `i0_percent` values; use their magnitude). With `i0_percent = 0` and `pfe_kw = 0`, `Y_m = 0` and the T-circuit reduces to the series impedance `z_k`.
+
+**Turns ratio** — the tap changer modifies the rated voltage of the winding given by `tap_side`:
+
+```
+n_tap   = 1 + (tap_pos − tap_neutral) · tap_step_percent / 100
+V_r,hv  = vn_hv_kv · n_tap   if tap_side == "hv"   else vn_hv_kv
+V_r,lv  = vn_lv_kv · n_tap   if tap_side == "lv"   else vn_lv_kv
+t       = (V_r,hv / V_b,hv) / (V_r,lv / V_b,lv) · e^(j·shift_degree·π/180)
+```
+
+`t` is the off-nominal ratio of the ideal transformer (`t : 1`, HV : LV). It captures both the tap position and any mismatch between the rated voltages and the bus base voltages. In the provided cases all transformers have `tap_side = "hv"`, and `shift_degree` and `tap_step_degree` are 0.
+
+**Equivalent π-circuit** — if your network model uses π-branches, the internal T node can be eliminated with a star–delta transformation (`z_a = z_k / 2` on both sides):
+
+```
+z_series = (z_a² + 2·z_a·z_m) / z_m          with z_m = 1 / Y_m
+y_shunt  = 1 / (z_a + 2·z_m)                 at each end (on the LV side of the ideal transformer)
+```
+
+When `Y_m = 0`, use `z_series = z_k` and `y_shunt = 0`.
+
+Note: some branches that connect buses of different voltage levels in the original IEEE data are represented as transformers; this is why some transformers have small `vk_percent` values or non-zero `vkr_percent` and `i0_percent`.
 
 ---
 
