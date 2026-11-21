@@ -271,7 +271,7 @@ These tables contain a converged load flow solution of the case **as given**. Us
 | `i_hv_ka`, `i_lv_ka` | kA | Current magnitude at each side |
 | `vm_hv_pu`, `va_hv_degree` | p.u., deg | Voltage at the HV bus |
 | `vm_lv_pu`, `va_lv_degree` | p.u., deg | Voltage at the LV bus |
-| `loading_percent` | % | Loading relative to `sn_mva` |
+| `loading_percent` | % | Loading relative to the rating `sn_mva` (current-based: winding current × rated voltage × √3 / `sn_mva` × 100, larger of the two sides) |
 
 ### 3.4 `Result_ExternalGrid`
 
