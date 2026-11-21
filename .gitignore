@@ -221,3 +221,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Instructor-only source of the data format document (not shared with students)
+data_format_md/
+data_format_md.zip
