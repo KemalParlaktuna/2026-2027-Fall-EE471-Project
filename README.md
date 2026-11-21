@@ -6,7 +6,7 @@ Template repository for the EE471 term project: a general-purpose **Newton–Rap
 
 Develop a load flow tool that:
 
-- reads power system cases in the JSON format described in [`docs/DATA_FORMAT.md`](docs/DATA_FORMAT.md),
+- reads power system cases in the JSON format described in [`docs/EE471_Case_Data_Format.pdf`](docs/EE471_Case_Data_Format.pdf),
 - lets the user load a case, **add new network components** and **edit existing components** in the loaded system,
 - lets the user **select a solution method**, **configure its parameters** (e.g. tolerance, maximum iterations), run the analysis on the modified system and view the results.
 
@@ -29,8 +29,8 @@ Each analysis must report:
 .
 ├── README.md            This file
 ├── docs/
-│   ├── DATA_FORMAT.md   Description of the case data format (all tables, fields and element models)
-│   └── figures/         Diagrams (*.drawio.svg — viewable as images, editable in draw.io)
+│   ├── EE471_2026_Fall_Project_Definition.pdf   Official project definition
+│   └── EE471_Case_Data_Format.pdf               Case data format (all tables, fields and element models)
 └── cases/
     ├── json/            Case files in JSON format (input of your tool)
     │   ├── ieee14.json
@@ -84,4 +84,4 @@ All students must read and accept the Generative AI Course Policy on ODTUClass (
 - Include a brief **AI Usage Statement** (tool, purpose, extent of contribution) whenever GenAI is used.
 - You must understand every line of your code and be able to modify and explain it during demonstrations.
 
-Refer to the official project definition document and the course policy for the complete rules.
+Refer to the official [project definition](docs/EE471_2026_Fall_Project_Definition.pdf) and the course policy for the complete rules.
